@@ -42,11 +42,7 @@ public class Controller {
         while (sc.hasNext()){
             int number = sc.nextInt();
             if (number != model.getGuessedNumber()){
-                if (model.greaterLowerNumberCheck(number, model.getGuessedNumber())){
-                    view.print(View.UPPER_WRONG_ANSWER);
-                }else {
-                    view.print(View.LOWER_WRONG_ANSWER);
-                }
+                getClueAboutGreaterOrLowerNumber(number);
                 model.answersStoring(number);
             }else {
                 view.print(View.RIGHT_ANSWER);
@@ -57,6 +53,14 @@ public class Controller {
                 break;
             }
             sc.next();
+        }
+    }
+
+    private void getClueAboutGreaterOrLowerNumber(int number) {
+        if (model.greaterLowerNumberCheck(number, model.getGuessedNumber())){
+            view.print(View.UPPER_WRONG_ANSWER);
+        }else {
+            view.print(View.LOWER_WRONG_ANSWER);
         }
     }
 }
