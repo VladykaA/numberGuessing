@@ -2,65 +2,70 @@ package controller;
 
 import model.Model;
 import view.View;
-
 import java.util.Scanner;
+
+import static util.ConstantsUtil.*;
 
 public class Controller {
 
-    private Model model;
-    private View view;
+    public static final Scanner SCANNER = new Scanner(System.in);
+
+    private final Model model;
+    private final View view;
 
     public Controller(Model model, View view) {
         this.model = model;
         this.view = view;
     }
 
-    public void execute(){
-        view.print(View.WELCOME);
-        view.print(View.RANGE_DETERMINATION);
-        Scanner sc = new Scanner(System.in);
-        guessedNumberRange(sc);
-        view.print(View.LETS_THE_GAME_BEGIN);
-        checkingRun(sc);
-
+    public void execute() {
+        view.print(WELCOME);
+        guessedNumberRange();
+        checkingRun();
     }
 
-    public void guessedNumberRange(Scanner sc){
-        if (model.determinationChoice(sc.next())){
-            view.print(View.POSITIVE_DETERMINATION_RESULT_FROM);
-            model.setNumberFrom(sc.nextInt());
-            view.print(View.POSITIVE_DETERMINATION_RESULT_TO);
-            model.setNumberTo(sc.nextInt());
-            model.setGuessedNumber(model.rand(model.getNumberFrom(), model.getNumberTo()));
-        }else {
-            view.print(View.NEGATIVE_DETERMINATION_RESULT);
-            model.setGuessedNumber(model.rand());
-        }
+    public void guessedNumberRange() {
+        model.establishingGuessedNumber();
     }
 
-    public void checkingRun(Scanner sc){
-        while (sc.hasNext()){
-            int number = sc.nextInt();
-            if (number != model.getGuessedNumber()){
-                getClueAboutGreaterOrLowerNumber(number);
+    public void checkingRun() {
+        while (SCANNER.hasNext()) {
+            String num = SCANNER.next();
+            if (isInteger(num)) {
+                int number = Integer.parseInt(num);
+                if (number == model.getGuessedNumber()) {
+                    view.print(RIGHT_ANSWER + "\n" +
+                            ANSWER + number + "\n" +
+                            ATTEMPTS);
+                    view.printList(model.getAnswers());
+                    break;
+                }
+                printClueAboutGreaterOrLowerNumber(number);
                 model.answersStoring(number);
-            }else {
-                view.print(View.RIGHT_ANSWER);
-                view.print(View.ANSWER + number);
-                view.print(View.THE_RANGE_FROM + model.getNumberFrom() + View.THE_RANGE_TO + model.getNumberTo());
-                view.print(View.ATTEMPTS);
-                view.printArray(model.getAnswers());
-                break;
             }
-            sc.next();
+            SCANNER.next();
         }
     }
 
-    private void getClueAboutGreaterOrLowerNumber(int number) {
-        if (model.greaterLowerNumberCheck(number, model.getGuessedNumber())){
-            view.print(View.UPPER_WRONG_ANSWER);
-        }else {
-            view.print(View.LOWER_WRONG_ANSWER);
+    private boolean isInteger(String num) {
+        if (!num.matches("-?(0|[1-9]\\d*)")) {
+            view.print(WRONG_INPUT);
+            return false;
         }
+        return true;
+    }
+
+    private void printClueAboutGreaterOrLowerNumber(int number) {
+        if (number < model.getGuessedNumber() && number > model.getNumberFrom()) {
+            model.setNumberFrom(number);
+        } else if (number > model.getGuessedNumber() && number < model.getNumberTo()) {
+            model.setNumberTo(number);
+        }
+        view.print(WRONG_ANSWER + " "
+                + THE_RANGE_FROM
+                + model.getNumberFrom()
+                + " - "
+                + model.getNumberTo()
+                + THE_RANGE_TO);
     }
 }

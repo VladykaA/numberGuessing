@@ -1,43 +1,29 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.List;
+import static util.ConstantsUtil.*;
 
 public class Model {
-    private Random random;
+
     private int guessedNumber;
-    private int numberFrom;
-    private int numberTo;
-    private ArrayList<Integer> answers = new ArrayList<>();
-    private final int MAX = 100;
-    private final int MIN = 0;
+    private int numberFrom = MIN;
+    private int numberTo = MAX_VALUE;
+    private List<Integer> answers;
 
-    public boolean determinationChoice(String choice) {
-        return choice.equals("yes".toLowerCase());
+    public Model() {
+        answers = new ArrayList<>();
     }
 
-    public int rand(int min, int max) {
-        if (min > max) {
-            throw new IllegalArgumentException("max cannot be lower min");
-        }
-        random = new Random();
-        return random.nextInt((max - min) + 1) + min;
-    }
-
-    public int rand() {
-        random = new Random();
-        return random.nextInt((MAX - MIN) + 1) + MIN;
-    }
-
-    public void answersStoring(int number){
+    public void answersStoring(int number) {
         answers.add(number);
     }
 
-    public boolean greaterLowerNumberCheck(int number, int guessedNumber){
+    public boolean greaterLowerNumberCheck(int number) {
         return number > guessedNumber;
     }
 
-    public ArrayList<Integer> getAnswers() {
+    public List<Integer> getAnswers() {
         return answers;
     }
 
@@ -45,8 +31,9 @@ public class Model {
         return guessedNumber;
     }
 
-    public void setGuessedNumber(int guessedNumber) {
-        this.guessedNumber = guessedNumber;
+    public void establishingGuessedNumber() {
+        this.guessedNumber = RANDOM.nextInt(MAX_VALUE) + MIN;
+        System.out.println(guessedNumber);
     }
 
     public int getNumberFrom() {
