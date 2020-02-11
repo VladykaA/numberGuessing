@@ -1,7 +1,9 @@
 package controller;
 
+import javafx.beans.binding.When;
 import model.Model;
 import view.View;
+
 import java.util.Scanner;
 
 import static util.ConstantsUtil.*;
@@ -29,23 +31,27 @@ public class Controller {
     }
 
     public void checkingRun() {
-        while (SCANNER.hasNext()) {
-            String num = SCANNER.next();
-            if (isInteger(num)) {
-                int number = Integer.parseInt(num);
-                if (number == model.getGuessedNumber()) {
-                    view.print(RIGHT_ANSWER + "\n" +
-                            ANSWER + number + "\n" +
-                            ATTEMPTS);
-                    view.printList(model.getAnswers());
-                    break;
-                }
-                printClueAboutGreaterOrLowerNumber(number);
-                model.answersStoring(number);
+
+        while (true) {
+            int number;
+            while (!SCANNER.hasNextInt()) {
+                view.print(WRONG_INPUT);
+                SCANNER.next();
             }
-            SCANNER.next();
+            number = SCANNER.nextInt();
+            if (number == model.getGuessedNumber()) {
+                view.print(RIGHT_ANSWER + "\n" +
+                        ANSWER + number + "\n" +
+                        ATTEMPTS);
+                view.printList(model.getAnswers());
+                break;
+            }
+            printClueAboutGreaterOrLowerNumber(number);
+            model.answersStoring(number);
         }
+
     }
+
 
     private boolean isInteger(String num) {
         if (!num.matches("-?(0|[1-9]\\d*)")) {
