@@ -31,7 +31,6 @@ public class Controller {
     }
 
     public void checkingRun() {
-
         while (true) {
             int number;
             while (!SCANNER.hasNextInt()) {
@@ -49,7 +48,6 @@ public class Controller {
             printClueAboutGreaterOrLowerNumber(number);
             model.answersStoring(number);
         }
-
     }
 
 
